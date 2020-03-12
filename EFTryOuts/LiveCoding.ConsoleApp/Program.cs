@@ -16,19 +16,7 @@ namespace LiveCoding.ConsoleApp
 
     private static void PrintAbendschule()
     {
-      using (ApplicationDbContext ctx = new ApplicationDbContext())
-      {
-        var pupils = ctx
-          .Pupils
-          .Where(p => p.Registrationtype == Registrationtype.Abendschule)
-          .Include(p => p.School)
-          .ThenInclude(s => s.City);
-
-        foreach (Pupil p in pupils)
-        {
-          Console.WriteLine(p);
-        }
-      }
+      throw new NotImplementedException();
     }
 
     private static void InitData()
