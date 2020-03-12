@@ -1,22 +1,54 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Channels;
 using LiveCoding.Core;
+using LiveCoding.Core.Contracts;
 using LiveCoding.Persistence;
+using LiveCoding.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LiveCoding.ConsoleApp
 {
   class Program
   {
+    
+
     static void Main(string[] args)
     {
       InitData();
-      PrintAbendschule();
+
+
+      using (ApplicationDbContext ctx = new ApplicationDbContext())
+      {
+        //EntityFrameworkPupilRepository entityFrameworkPupilRepository = new EntityFrameworkPupilRepository(ctx);
+        InMemoryPupilRepository inMemoryPupilRepository = new InMemoryPupilRepository();
+        PrintAbendschule(inMemoryPupilRepository);
+        PrintKolleg(inMemoryPupilRepository);
+      }
     }
 
-    private static void PrintAbendschule()
+    private static void PrintKolleg(IPupilRepository pupilRepository)
     {
-      throw new NotImplementedException();
+      Pupil[] pupils = pupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Kolleg);
+
+      Console.WriteLine("Kolleg:");
+      foreach (var pupil in pupils)
+      {
+        //Console.WriteLine($"Pupil: ''{pupil}' School: {pupil.School.Name} City: {pupil.School.City.Name}");
+        Console.WriteLine($"Pupil: ''{pupil}'");
+      }
+    }
+
+    private static void PrintAbendschule(IPupilRepository pupilRepository)
+    {
+      Pupil[] pupils = pupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Abendschule);
+
+      Console.WriteLine("Abendschule:");
+      foreach (var pupil in pupils)
+      {
+        //Console.WriteLine($"Pupil: ''{pupil}' School: {pupil.School.Name} City: {pupil.School.City.Name}");
+        Console.WriteLine($"Pupil: ''{pupil}'");
+      }
     }
 
     private static void InitData()
@@ -25,6 +57,7 @@ namespace LiveCoding.ConsoleApp
       {
         // Remove all the data from the db
         ctx.Pupils.RemoveRange(ctx.Pupils);
+        ctx.Schools.RemoveRange(ctx.Schools);
 
         School htlLeonding = new School()
         {
