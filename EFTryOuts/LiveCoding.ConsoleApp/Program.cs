@@ -1,35 +1,29 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Channels;
 using LiveCoding.Core;
 using LiveCoding.Core.Contracts;
 using LiveCoding.Persistence;
-using LiveCoding.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace LiveCoding.ConsoleApp
 {
   class Program
   {
-    
 
     static void Main(string[] args)
     {
       InitData();
 
 
-      using (ApplicationDbContext ctx = new ApplicationDbContext())
-      {
-        //EntityFrameworkPupilRepository entityFrameworkPupilRepository = new EntityFrameworkPupilRepository(ctx);
-        InMemoryPupilRepository inMemoryPupilRepository = new InMemoryPupilRepository();
-        PrintAbendschule(inMemoryPupilRepository);
-        PrintKolleg(inMemoryPupilRepository);
-      }
+      PrintAbendschule();
+      PrintKolleg();
     }
 
-    private static void PrintKolleg(IPupilRepository pupilRepository)
+    private static void PrintKolleg()
     {
-      Pupil[] pupils = pupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Kolleg);
+      Pupil[] pupils;
+      using (IUnitOfWork uow = new UnitOfWork())
+      {
+         pupils = uow.PupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Kolleg);
+      }
 
       Console.WriteLine("Kolleg:");
       foreach (var pupil in pupils)
@@ -39,9 +33,13 @@ namespace LiveCoding.ConsoleApp
       }
     }
 
-    private static void PrintAbendschule(IPupilRepository pupilRepository)
+    private static void PrintAbendschule()
     {
-      Pupil[] pupils = pupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Abendschule);
+      Pupil[] pupils;
+      using (IUnitOfWork uow = new UnitOfWork())
+      {
+        pupils = uow.PupilRepository.GetPupilsByRegistrationTypeWithSchool(Registrationtype.Abendschule);
+      }
 
       Console.WriteLine("Abendschule:");
       foreach (var pupil in pupils)
@@ -64,7 +62,7 @@ namespace LiveCoding.ConsoleApp
           Principal = "Wolfgang Holzer",
           Name = "HTL Leonding",
           Schooltype = Schooltype.Htl,
-          City = new City( 4060, "Leonding")
+          City = new City(4060, "Leonding")
         };
 
 
