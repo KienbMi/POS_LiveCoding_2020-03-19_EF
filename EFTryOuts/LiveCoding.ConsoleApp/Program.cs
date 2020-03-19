@@ -25,8 +25,17 @@ namespace LiveCoding.ConsoleApp
         
         PrintAbendschule(uow.PupilRepository);
         PrintKolleg(uow.PupilRepository);
+        PrintSchoolOverview(uow.SchoolRepository);
+        
+      }
+    }
 
-
+    private static void PrintSchoolOverview(ISchoolRepository schoolRepository)
+    {
+      (School School, int CntOfPupils)[] result = schoolRepository.GetAllSchoolsWithPupilCountAsNamedTuple();
+      foreach (var entry in result)
+      {
+        Console.WriteLine($"-> School: {entry.School.Name} [{entry.CntOfPupils}]");
       }
     }
 
