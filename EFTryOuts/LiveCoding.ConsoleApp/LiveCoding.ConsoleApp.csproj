@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LiveCoding.Core\LiveCoding.Core.csproj" />
+    <ProjectReference Include="..\LiveCoding.Persistence.InMemory\LiveCoding.Persistence.InMemory.csproj" />
     <ProjectReference Include="..\LiveCoding.Persistence\LiveCoding.Persistence.csproj" />
   </ItemGroup>
 

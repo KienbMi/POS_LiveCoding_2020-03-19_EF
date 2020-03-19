@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LiveCoding.Persistence.Repositories
 {
-  public class EFPupilRepository : IPupilRepository
+  class EFPupilRepository : IPupilRepository
   {
     private readonly ApplicationDbContext _dbContext;
 
@@ -33,6 +33,8 @@ namespace LiveCoding.Persistence.Repositories
     public void Add(Pupil pupil) =>
       _dbContext.Pupils.Add(pupil);
 
+    public void AddRange(IEnumerable<Pupil> pupils) => _dbContext.Pupils.AddRange(pupils);
+
     public void Delete(int id)
     {
       //var pupil = _dbContext.Pupils
@@ -46,6 +48,8 @@ namespace LiveCoding.Persistence.Repositories
         _dbContext.Pupils.Remove(pupil);
       }
     }
+
+    public void RemoveRange(IEnumerable<Pupil> pupils) => _dbContext.Pupils.RemoveRange(pupils);
 
 
     public void Update(Pupil pupil)

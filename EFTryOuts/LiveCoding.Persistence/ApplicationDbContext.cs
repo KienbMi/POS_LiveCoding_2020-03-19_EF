@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace LiveCoding.Persistence
 {
-  public class ApplicationDbContext : DbContext
+  internal class ApplicationDbContext : DbContext
   {
     public DbSet<Pupil> Pupils { get; set; }
     public DbSet<School> Schools { get; set; }

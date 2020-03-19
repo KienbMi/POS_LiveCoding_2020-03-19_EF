@@ -10,7 +10,14 @@ namespace LiveCoding.Core.Contracts
     Pupil[] GetPupilsByRegistrationTypeWithSchool(Registrationtype registrationtype);
 
     void Add(Pupil pupil);
+    void AddRange(IEnumerable<Pupil> pupils);
+    
     void Delete(int id);
+    void RemoveRange(IEnumerable<Pupil> pupils);
+
     void Update(Pupil pupil);
+    
+    
+    
   }
 }

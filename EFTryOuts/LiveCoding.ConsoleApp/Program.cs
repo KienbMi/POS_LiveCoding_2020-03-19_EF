@@ -4,6 +4,7 @@ using System.Threading.Channels;
 using LiveCoding.Core;
 using LiveCoding.Core.Contracts;
 using LiveCoding.Persistence;
+using LiveCoding.Persistence.InMemory;
 using LiveCoding.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,13 +18,15 @@ namespace LiveCoding.ConsoleApp
     {
       InitData();
 
-
-      using (ApplicationDbContext ctx = new ApplicationDbContext())
+      using (IUnitOfWork uow = new UnitOfWork())
       {
         //EntityFrameworkPupilRepository entityFrameworkPupilRepository = new EntityFrameworkPupilRepository(ctx);
-        InMemoryPupilRepository inMemoryPupilRepository = new InMemoryPupilRepository();
-        PrintAbendschule(inMemoryPupilRepository);
-        PrintKolleg(inMemoryPupilRepository);
+        //InMemoryPupilRepository inMemoryPupilRepository = new InMemoryPupilRepository();
+        
+        PrintAbendschule(uow.PupilRepository);
+        PrintKolleg(uow.PupilRepository);
+
+
       }
     }
 
@@ -53,11 +56,11 @@ namespace LiveCoding.ConsoleApp
 
     private static void InitData()
     {
-      using (ApplicationDbContext ctx = new ApplicationDbContext())
+      using (IUnitOfWork uow = new UnitOfWork()) 
       {
         // Remove all the data from the db
-        ctx.Pupils.RemoveRange(ctx.Pupils);
-        ctx.Schools.RemoveRange(ctx.Schools);
+        uow.PupilRepository.RemoveRange(uow.PupilRepository.GetAll());
+        uow.SchoolRepository.RemoveRange(uow.SchoolRepository.GetAll());
 
         School htlLeonding = new School()
         {
@@ -68,7 +71,7 @@ namespace LiveCoding.ConsoleApp
         };
 
 
-        ctx.Pupils.AddRange(new[] {
+        uow.PupilRepository.AddRange(new[] {
           new Pupil()
             {
               FirstName = "Oscar",
@@ -103,9 +106,12 @@ namespace LiveCoding.ConsoleApp
           }
 
         });
-        ctx.Schools.Add(htlLeonding);
+        
+        uow.SchoolRepository.Add(htlLeonding);
 
-        ctx.SaveChanges();
+        int cntOfChanges = uow.SaveChanges();
+        Console.WriteLine($"changes: {cntOfChanges}");
+        
       }
     }
   }
