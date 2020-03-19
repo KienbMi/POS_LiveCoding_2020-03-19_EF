@@ -8,7 +8,7 @@ namespace LiveCoding.Core.Contracts
   {
     School[] GetAll();
     SchoolWithPupilCountDto[] GetAllSchoolsWithPupilCount();
-    //(School School, int CntOfPupil)[] GetAllSchoolsWithPupilCountAsNamedTuple();
+    (School School, int CntOfPupil)[] GetAllSchoolsWithPupilCountAsNamedTuple();
 
     void Add(School school);
 

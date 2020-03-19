@@ -24,20 +24,21 @@ namespace LiveCoding.Persistence.Repositories
         .ToArray();
 
     public SchoolWithPupilCountDto[] GetAllSchoolsWithPupilCount()
-      =>
-        _dbContext
+      => _dbContext
           .Schools
           .Select(s => new SchoolWithPupilCountDto() { School = s, CntOfPupils = s.Pupils.Count })
           .OrderByDescending(_ => _.CntOfPupils)
           .ToArray();
 
-    //public (School School, int CntOfPupil)[] GetAllSchoolsWithPupilCountAsNamedTuple()
-    //=>
-    //  _dbContext
-    //    .Schools
-    //    .Select(s => new ( s,s.Pupils.Count))
-    //    .OrderByDescending(_ => _.CntOfPupil)
-    //    .ToArray();
+    public (School School, int CntOfPupil)[] GetAllSchoolsWithPupilCountAsNamedTuple()
+       => _dbContext
+               .Schools
+               .Select(s => new { School = s, CntOfPupil = s.Pupils.Count })
+               .OrderByDescending(_ => _.CntOfPupil)
+               .ToArray()
+               .Select(_ => (_.School, _.CntOfPupil))
+               .ToArray();
+
 
     public void Add(School school) => _dbContext.Schools.Add(school);
 
